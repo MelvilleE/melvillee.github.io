@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>App Selector</title>
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --muted: #6b7280;
+            --btn-start: #eef4ff; /* soft pastel blue */
+            --btn-end: #fff6fb;   /* soft pastel pink/lilac */
+            --btn-border: rgba(15,23,42,0.04);
+            --btn-text: #0f172a;
+        }
+        html,body{
+            height:100%;
+            margin:0;
+            font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+            background:linear-gradient(180deg,var(--bg),#e9eef7 60%);
+            color:#111827;
+        }
+        .wrap{
+            min-height:100%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:32px;
+        }
+        .card{
+            width:680px;
+            max-width:96%;
+            background:var(--card);
+            border-radius:12px;
+            box-shadow:0 8px 30px rgba(16,24,40,0.08);
+            padding:28px;
+            text-align:center;
+        }
+        h1{ margin:0 0 8px; font-size:20px; }
+        p{ margin:0 0 20px; color:var(--muted); font-size:14px; }
+        .choices{
+            display:flex;
+            gap:16px;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .btn{
+            flex:1 1 0;
+            padding:16px 22px;
+            border-radius:10px;
+            border:1px solid var(--btn-border);
+            background:linear-gradient(180deg,var(--btn-start),var(--btn-end));
+            color:var(--btn-text);
+            font-weight:600;
+            font-size:16px;
+            cursor:pointer;
+            transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            box-shadow: 0 4px 12px rgba(99,102,241,0.04);
+        }
+        .btn:active{ transform:translateY(1px); }
+        .btn:hover{ box-shadow:0 8px 26px rgba(99,102,241,0.06); transform:translateY(-2px); }
+        .btn:focus-visible{
+            outline:3px solid rgba(99,102,241,0.12);
+            outline-offset:2px;
+        }
+        /* neutralize previous left/right differences so both buttons match */
+        .left, .right {
+            color:var(--btn-text);
+            border-color:var(--btn-border);
+            background:linear-gradient(180deg,var(--btn-start),var(--btn-end));
+        }
+        @media (max-width:520px){
+            .choices{ flex-direction:column; }
+            .btn{ width:100%; }
+        }
+        .note{ margin-top:14px; font-size:12px; color:var(--muted); }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="card" role="region" aria-label="App selector">
+            <h1>Select a workspace</h1>
+            <p>Choose from Extension Quote App or Loft Quote App.</p>
+
+            <div class="choices" role="tablist" aria-label="Options">
+                <button class="btn left" type="button" aria-pressed="false"
+                    onclick="location.href='https://www.google.com'">
+                    Extensions
+                </button>
+
+                <button class="btn right" type="button" aria-pressed="false"
+                    onclick="location.href='https://www.facebook.com'">
+                    Lofts
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Home - Login</title>
+    <style>
+        :root { --bg:#f4f7fb; --card:#ffffff; --accent:#2b6cb0; --danger:#e53e3e; }
+        html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+        body{display:grid;place-items:center;background:linear-gradient(180deg,#eef4fb, #f4f7fb);}
+        .card{width:360px;background:var(--card);padding:28px;border-radius:10px;box-shadow:0 8px 30px rgba(11,22,45,0.08);}
+        h1{margin:0 0 12px;font-size:20px;color:#0f172a;}
+        p.sub{margin:0 0 18px;color:#475569;font-size:13px;}
+        .field{display:flex;flex-direction:column;margin-bottom:12px;}
+        label{font-size:13px;color:#334155;margin-bottom:6px;}
+        input[type="text"],input[type="password"]{padding:10px 12px;border:1px solid #e6eef8;border-radius:8px;font-size:14px;}
+        .actions{display:flex;align-items:center;justify-content:space-between;margin-top:14px;}
+        button{background:var(--accent);color:#fff;padding:10px 14px;border:0;border-radius:8px;cursor:pointer;font-weight:600;}
+        button:disabled{opacity:0.6;cursor:not-allowed;}
+        .msg{font-size:13px;color:var(--danger);min-height:18px;margin-top:8px;}
+        .meta{font-size:12px;color:#64748b;margin-top:10px;text-align:center;}
+        .toggle{background:transparent;border:0;color:var(--accent);cursor:pointer;font-size:13px;padding:0;}
+    </style>
+</head>
+<body>
+    <main class="card" role="main">
+        <h1>Sign in to the Quote System</h1>
+        <p class="sub">Sign in with your username and password to continue.</p>
+
+        <form id="loginForm" autocomplete="off" novalidate>
+            <div class="field">
+                <label for="username">Username</label>
+                <input id="username" name="username" type="text" autocomplete="username" required autofocus />
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <input id="password" name="password" type="password" autocomplete="current-password" required style="flex:1" />
+                    <button id="toggle" type="button" class="toggle" aria-pressed="false">Show</button>
+                </div>
+            </div>
+
+            <div class="actions">
+                <div style="font-size:13px;color:#475569">Try to sign in</div>
+                <button id="submitBtn" type="submit">Sign in</button>
+            </div>
+
+            <div id="msg" class="msg" role="status" aria-live="polite"></div>
+        </form>
+    </main>
+
+    <script>
+        // Simple client-side check for demonstration.
+        // Replace with a server-side authentication for real applications.
+        (function () {
+            const storedUsername = 'admin';
+            const storedPassword = 'password123'; // demo-only: do NOT use hard-coded credentials in production
+
+            const form = document.getElementById('loginForm');
+            const usernameEl = document.getElementById('username');
+            const passwordEl = document.getElementById('password');
+            const msgEl = document.getElementById('msg');
+            const submitBtn = document.getElementById('submitBtn');
+            const toggleBtn = document.getElementById('toggle');
+
+            let attempts = 0;
+            const maxAttempts = 5;
+
+            toggleBtn.addEventListener('click', () => {
+                const isHidden = passwordEl.type === 'password';
+                passwordEl.type = isHidden ? 'text' : 'password';
+                toggleBtn.textContent = isHidden ? 'Hide' : 'Show';
+                toggleBtn.setAttribute('aria-pressed', String(isHidden));
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (attempts >= maxAttempts) return;
+
+                const u = usernameEl.value.trim();
+                const p = passwordEl.value;
+
+                if (!u || !p) {
+                    showMessage('Enter both username and password.');
+                    return;
+                }
+
+                if (u === storedUsername && p === storedPassword) {
+                    // Success: redirect to app-selector.html
+                    showMessage('Signing in...', false);
+                    // Small delay to show feedback
+                    setTimeout(() => { window.location.href = 'app-selector.html'; }, 400);
+                    return;
+                }
+
+                attempts++;
+                const left = Math.max(0, maxAttempts - attempts);
+                if (left === 0) {
+                    submitBtn.disabled = true;
+                    showMessage('Too many failed attempts. Please try again later.');
+                } else {
+                    showMessage(`Incorrect username or password. ${left} attempt(s) remaining.`);
+                }
+            });
+
+            function showMessage(text, isError = true) {
+                msgEl.textContent = text;
+                msgEl.style.color = isError ? 'var(--danger)' : 'green';
+            }
+        })();
+    </script>
+</body>
+</html></div>
