@@ -3,301 +3,101 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>App Selector — Dashboard</title>
+    <title>App Selector</title>
     <style>
-        :root{
-            --bg:#f4f7fb;
-            --card:#fff;
-            --muted:#6b7280;
-            --accent:#6366f1;
-            --glass: rgba(15,23,42,0.04);
-            --radius:12px;
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --muted: #6b7280;
+            --btn-start: #eef4ff; /* soft pastel blue */
+            --btn-end: #fff6fb;   /* soft pastel pink/lilac */
+            --btn-border: rgba(15,23,42,0.04);
+            --btn-text: #0f172a;
         }
-        html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,var(--bg),#eef3fb 70%);color:#0f172a;}
-        .app {
+        html,body{
+            height:100%;
+            margin:0;
+            font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+            background:linear-gradient(180deg,var(--bg),#e9eef7 60%);
+            color:#111827;
+        }
+        .wrap{
             min-height:100%;
             display:flex;
-            gap:20px;
+            align-items:center;
+            justify-content:center;
+            padding:32px;
+        }
+        .card{
+            width:680px;
+            max-width:96%;
+            background:var(--card);
+            border-radius:12px;
+            box-shadow:0 8px 30px rgba(16,24,40,0.08);
             padding:28px;
-            box-sizing:border-box;
+            text-align:center;
         }
-
-        /* Sidebar */
-        .sidebar{
-            width:220px;
-            background:linear-gradient(180deg,rgba(255,255,255,0.9),var(--card));
-            border-radius:var(--radius);
-            padding:18px;
-            box-shadow:0 8px 30px rgba(16,24,40,0.06);
+        h1{ margin:0 0 8px; font-size:20px; }
+        p{ margin:0 0 20px; color:var(--muted); font-size:14px; }
+        .choices{
             display:flex;
-            flex-direction:column;
-            gap:14px;
-            flex-shrink:0;
-        }
-        .brand{
-            display:flex;
-            gap:10px;
-            align-items:center;
-            font-weight:700;
-            color:var(--accent);
-            font-size:16px;
-        }
-        .nav{
-            margin-top:8px;
-            display:flex;
-            flex-direction:column;
-            gap:8px;
-        }
-        .nav a{
-            display:flex;
-            gap:10px;
-            align-items:center;
-            padding:10px 12px;
-            border-radius:10px;
-            color:#0f172a;
-            text-decoration:none;
-            font-weight:600;
-            font-size:14px;
-        }
-        .nav a:hover{ background:linear-gradient(90deg, rgba(99,102,241,0.06), rgba(99,102,241,0.02)); }
-
-        /* Main area */
-        .main{
-            flex:1;
-            display:flex;
-            flex-direction:column;
-            gap:20px;
-        }
-        .top{
-            display:flex;
+            gap:16px;
             justify-content:space-between;
-            align-items:center;
-            gap:12px;
-        }
-        .search{
-            flex:1;
-            display:flex;
-            gap:12px;
-            max-width:720px;
-        }
-        .search input{
-            flex:1;
-            padding:12px 14px;
-            border-radius:10px;
-            border:1px solid var(--glass);
-            background:transparent;
-            font-size:14px;
-            outline:none;
-        }
-        .top-actions{
-            display:flex;
-            gap:10px;
             align-items:center;
         }
         .btn{
-            padding:10px 14px;
+            flex:1 1 0;
+            padding:16px 22px;
             border-radius:10px;
-            background:linear-gradient(180deg,#eef4ff,#fff6fb);
-            border:1px solid var(--glass);
-            font-weight:700;
-            color:var(--accent);
+            border:1px solid var(--btn-border);
+            background:linear-gradient(180deg,var(--btn-start),var(--btn-end));
+            color:var(--btn-text);
+            font-weight:600;
+            font-size:16px;
             cursor:pointer;
+            transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            box-shadow: 0 4px 12px rgba(99,102,241,0.04);
         }
-
-        /* Summary cards */
-        .summary{
-            display:grid;
-            grid-template-columns:repeat(4,1fr);
-            gap:14px;
+        .btn:active{ transform:translateY(1px); }
+        .btn:hover{ box-shadow:0 8px 26px rgba(99,102,241,0.06); transform:translateY(-2px); }
+        .btn:focus-visible{
+            outline:3px solid rgba(99,102,241,0.12);
+            outline-offset:2px;
         }
-        .card{
-            background:var(--card);
-            border-radius:12px;
-            padding:14px;
-            box-shadow:0 6px 20px rgba(16,24,40,0.04);
-            display:flex;
-            flex-direction:column;
-            gap:8px;
+        /* neutralize previous left/right differences so both buttons match */
+        .left, .right {
+            color:var(--btn-text);
+            border-color:var(--btn-border);
+            background:linear-gradient(180deg,var(--btn-start),var(--btn-end));
         }
-        .card .k{font-size:13px;color:var(--muted);}
-        .card .v{font-size:18px;font-weight:700;color:#0f172a;}
-
-        /* App grid */
-        .apps{
-            display:grid;
-            grid-template-columns:repeat(3,1fr);
-            gap:14px;
-            margin-top:4px;
+        @media (max-width:520px){
+            .choices{ flex-direction:column; }
+            .btn{ width:100%; }
         }
-        .app-tile{
-            background:linear-gradient(180deg,rgba(255,255,255,0.9),#fff);
-            border-radius:12px;
-            padding:16px;
-            box-shadow:0 8px 30px rgba(16,24,40,0.04);
-            display:flex;
-            flex-direction:column;
-            gap:12px;
-            align-items:flex-start;
-        }
-        .tile-head{display:flex;gap:12px;align-items:center;width:100%;}
-        .logo{
-            width:48px;height:48px;border-radius:10px;
-            background:linear-gradient(135deg,var(--accent),#8b5cf6);
-            display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;
-            box-shadow:0 6px 18px rgba(99,102,241,0.08);
-        }
-        .tile-title{font-weight:700;font-size:16px;}
-        .tile-desc{font-size:13px;color:var(--muted);margin-top:-4px;}
-        .tile-actions{display:flex;gap:8px;margin-top:auto;width:100%;}
-        .primary{
-            flex:1;
-            padding:10px 12px;
-            background:var(--accent);
-            color:#fff;
-            border-radius:10px;
-            font-weight:700;
-            text-align:center;
-            text-decoration:none;
-        }
-        .secondary{
-            padding:10px 12px;
-            border-radius:10px;
-            border:1px solid var(--glass);
-            background:transparent;
-            color:#0f172a;
-            text-decoration:none;
-            font-weight:700;
-        }
-
-        /* Footer note */
-        .note{font-size:13px;color:var(--muted);padding:10px;text-align:center;}
-
-        /* Responsive */
-        @media (max-width:1100px){
-            .apps{grid-template-columns:repeat(2,1fr);}
-            .summary{grid-template-columns:repeat(2,1fr);}
-        }
-        @media (max-width:760px){
-            .app{flex-direction:column;padding:16px;}
-            .sidebar{width:100%;flex-direction:row;align-items:center;gap:12px;padding:12px;overflow:auto;}
-            .main{width:100%;}
-            .apps{grid-template-columns:1fr;}
-            .summary{grid-template-columns:1fr;}
-        }
+        .note{ margin-top:14px; font-size:12px; color:var(--muted); }
     </style>
 </head>
 <body>
-    <div class="app" role="application" aria-label="Workspace dashboard">
-        <aside class="sidebar" role="navigation" aria-label="Main navigation">
-            <div class="brand" aria-hidden="false">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
-                    <rect x="2" y="2" width="20" height="20" rx="6" fill="#6366f1"/>
-                    <path d="M7 12h10" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-                Workspace
+    <div class="wrap">
+        <div class="card" role="region" aria-label="App selector">
+            <h1>Select a workspace</h1>
+            <p>Choose from Extension Quote App or Loft Quote App.</p>
+
+            <div class="choices" role="tablist" aria-label="Options">
+                <button class="btn left" type="button" aria-pressed="false"
+                    onclick="location.href='https://extension-app-smoky.vercel.app'">
+                    Extensions
+                </button>
+
+                <button class="btn right" type="button" aria-pressed="false"
+                    onclick="location.href='https://loft-app-brown.vercel.app'">
+                    Lofts
+                </button>
             </div>
-
-            <nav class="nav" aria-label="Sections">
-                <a href="#" aria-current="page">
-                    Dashboard
-                </a>
-                <a href="#apps">Apps</a>
-                <a href="#reports">Reports</a>
-                <a href="#settings">Settings</a>
-            </nav>
-
-            <div style="margin-top:auto;font-size:13px;color:var(--muted);">
-                Signed in as <strong>guest</strong>
-            </div>
-        </aside>
-
-        <main class="main">
-            <div class="top">
-                <div style="display:flex;flex-direction:column;gap:6px;">
-                    <h1 style="margin:0;font-size:18px;">Select a workspace</h1>
-                    <p style="margin:0;color:var(--muted);font-size:13px;">Quickly open one of your quote apps or view summary metrics.</p>
-                </div>
-
-                <div class="top-actions" role="search" aria-label="Open app">
-                    <div class="search" aria-hidden="false">
-                        <input type="search" placeholder="Search apps or resources..." aria-label="Search apps">
-                    </div>
-                    <button class="btn" title="Create new">New</button>
-                </div>
-            </div>
-
-            <section class="summary" aria-label="Summary metrics">
-                <div class="card">
-                    <div class="k">Active Apps</div>
-                    <div class="v">2</div>
-                </div>
-                <div class="card">
-                    <div class="k">Open Quotes</div>
-                    <div class="v">8</div>
-                </div>
-                <div class="card">
-                    <div class="k">Pending Reviews</div>
-                    <div class="v">3</div>
-                </div>
-                <div class="card">
-                    <div class="k">Uptime</div>
-                    <div class="v">99.97%</div>
-                </div>
-            </section>
-
-            <section id="apps" aria-label="Available apps">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                    <h2 style="margin:0;font-size:16px;">Apps</h2>
-                    <div style="font-size:13px;color:var(--muted);">Choose an environment to open</div>
-                </div>
-
-                <div class="apps">
-                    <article class="app-tile" role="article" aria-labelledby="ext-title">
-                        <div class="tile-head">
-                            <div class="logo" aria-hidden="true">E</div>
-                            <div>
-                                <div id="ext-title" class="tile-title">Extension Quote App</div>
-                                <div class="tile-desc">Production extension workspace — quick quotes and analytics.</div>
-                            </div>
-                        </div>
-                        <div class="tile-actions">
-                            <a class="primary" href="https://extension-app-smoky.vercel.app" target="_blank" rel="noopener">Open</a>
-                            <a class="secondary" href="#" role="button">Details</a>
-                        </div>
-                    </article>
-
-                    <article class="app-tile" role="article" aria-labelledby="loft-title">
-                        <div class="tile-head">
-                            <div class="logo" style="background:linear-gradient(135deg,#fb7185,#f97316);" aria-hidden="true">L</div>
-                            <div>
-                                <div id="loft-title" class="tile-title">Loft Quote App</div>
-                                <div class="tile-desc">Loft environment for estimating and proposals.</div>
-                            </div>
-                        </div>
-                        <div class="tile-actions">
-                            <a class="primary" href="https://loft-app-brown.vercel.app" target="_blank" rel="noopener">Open</a>
-                            <a class="secondary" href="#" role="button">Details</a>
-                        </div>
-                    </article>
-
-                    <article class="app-tile" role="article" aria-labelledby="tools-title">
-                        <div class="tile-head">
-                            <div class="logo" style="background:linear-gradient(135deg,#06b6d4,#7c3aed);" aria-hidden="true">T</div>
-                            <div>
-                                <div id="tools-title" class="tile-title">Utilities</div>
-                                <div class="tile-desc">Logs, deployments, and health checks.</div>
-                            </div>
-                        </div>
-                        <div class="tile-actions">
-                            <a class="primary" href="#" role="button">Open</a>
-                            <a class="secondary" href="#" role="button">Details</a>
-                        </div>
-                    </article>
-                </div>
-            </section>
-
-            <div class="note">Tip: Use the search box to quickly find an app. Links open in a new tab.</div>
-        </main>
+        </div>
     </div>
 </body>
 </html>
